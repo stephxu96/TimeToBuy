@@ -21,6 +21,7 @@ const formStyles =  {
 interface ItemFormProp {
     currency: string;
     onChange: (itemData: Item & { name: string }) => void;
+    defaultData?: Item;
 };
 
 interface ItemFormState {
@@ -32,11 +33,20 @@ interface ItemFormState {
     startAmount: string;
 };
 
+const initialState: ItemFormState = { 
+    name: "", 
+    price: "", 
+    startDate: "", 
+    recurrence: "", 
+    increment: "", 
+    startAmount: "" 
+};
+
 class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
 
     constructor(props: any) {
         super(props);
-        this.state = { name: "", price: "", startDate: "0", recurrence: "", increment: "1", startAmount: "0" }
+        this.state = initialState;
     }
     
     setInput = (id: "name" | "startDate" | "price" | "increment" | "recurrence" | "startAmount", event: any) => {
@@ -49,7 +59,12 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
     }
 
     getEndDate = () => {
-        let days = parseInt(this.state.price) / parseInt(this.state.increment);
+        const price = parseFloat(this.state.price);
+        const increment = parseFloat(this.state.increment);
+        if (isNaN(price) || isNaN(increment)) {
+            return "Please complete all fields to see result";
+        }
+        let days = Math.round(price / increment);
         var result = new Date(this.state.startDate);
         result.setDate(result.getDate() + days);
     
@@ -70,6 +85,11 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
             startAmount: parseFloat(startAmount), 
             endDate: this.getEndDate() 
         });
+        this.clearFormData();
+    }
+
+    clearFormData = () => {
+        this.setState(initialState);
     }
 
     render() {
@@ -79,6 +99,7 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
                 <div>
                     <TextField 
                         required 
+                        value={this.state.name}
                         label="Item name" 
                         variant="outlined"
                         onChange={(e: any) => this.setInput("name", e)}
@@ -86,6 +107,7 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
                     />
                     <TextField 
                         required 
+                        value={this.state.startDate}
                         label="Start date" 
                         variant="outlined"
                         type="date"
@@ -95,6 +117,7 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
                     />
                     <TextField 
                         required 
+                        value={this.state.startAmount}
                         label={`Starting amount`}
                         variant="outlined"
                         onChange={(e: any) => this.setInput("startAmount", e)}
@@ -105,6 +128,7 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
                     />
                     <TextField 
                         required 
+                        value={this.state.price}
                         label={`Price`}
                         variant="outlined"
                         onChange={(e: any) => this.setInput("price", e)}
@@ -114,6 +138,7 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
                         }}
                     />
                     <TextField
+                        value={this.state.increment}
                         label="Recurring deposit" 
                         variant="outlined"
                         onChange={(e: any) => this.setInput("increment", e)}

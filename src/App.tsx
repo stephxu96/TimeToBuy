@@ -1,7 +1,9 @@
 import React from 'react';
 import './App.css';
-import { Budget, BudgetTotal, BudgetPanel, PaceSelector, ItemForm } from './common'
-
+import { Budget, BudgetTotal, BudgetPanel, PaceSelector, ItemForm, ItemLine } from './common';
+import { List } from '@material-ui/core'
+;
+import { truncate } from 'fs';
 interface AppState {
   selectedItem: string | null;
   selectedBudget: number;
@@ -56,6 +58,13 @@ class App extends React.Component<any, AppState> {
             }
             <PaceSelector />
           </BudgetPanel>
+          <List dense={true}>
+            {
+              Object.keys(this.state.items).map((name) => {
+                return <ItemLine key={name} {...this.state.items[name]} />
+              })
+            }
+          </List>
           <ItemForm onChange={this.updateItemList} currency={this.state.currency} />
       </div>
     );
