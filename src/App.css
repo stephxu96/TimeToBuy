@@ -39,18 +39,19 @@
 
 .Top-panel {
   display: flex;
-  height: 30vh;
   justify-content: center;
   padding: 5vw;
+  padding-top: 3vh;
 }
 
 .Top-panel-inner {
-  padding: 5vh 5vw;
+  padding: 3vh 5vw;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  transition: 0.3s;
+  transition: 0.3s ease;
   
 }
 
 .Top-panel-inner:hover {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  transform: translate3d(2px, -2px, 0px);
 }

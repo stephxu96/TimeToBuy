@@ -5,15 +5,18 @@ interface BudgetProps {
     currency: string,
 };
 
-function Budget (budget: BudgetProps) {
-    return (
-        <div className="Top-panel">
-            <div className="Top-panel-inner">
-                <h1>Total Budget Available</h1>
-                <h1>{budget.currency}{budget.total}</h1>
-            </div>
-        </div>
-    );
+interface BudgetState {
+
+}
+
+class Budget extends React.Component<BudgetProps, BudgetState> {
+    render () {
+        return (
+            <>
+                        I am Budget
+            </>
+        );
+    }
 }
 
 export default Budget;
