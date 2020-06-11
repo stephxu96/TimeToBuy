@@ -1,6 +1,7 @@
 import React from 'react';
 import { TextField, InputLabel, Select, MenuItem, FormControl, InputAdornment, IconButton } from '@material-ui/core';
 import AddCircle from '@material-ui/icons/AddCircle';
+import { Item } from '../App';
 
 const formStyles =  {
     textStyle: {
@@ -17,11 +18,12 @@ const formStyles =  {
     } as React.CSSProperties,
 };
 
-interface ItemListProp {
+interface ItemFormProp {
     currency: string;
+    onChange: (itemData: Item & { name: string }) => void;
 };
 
-interface ItemListState {
+interface ItemFormState {
     name: string;
     startDate: string;
     price: string;
@@ -30,7 +32,7 @@ interface ItemListState {
     startAmount: string;
 };
 
-class ItemList extends React.Component<ItemListProp, ItemListState> {
+class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
 
     constructor(props: any) {
         super(props);
@@ -56,6 +58,18 @@ class ItemList extends React.Component<ItemListProp, ItemListState> {
         }
 
         return result.toLocaleDateString("en-US");
+    }
+
+    onButtonClick = () => {
+        let {name, startDate, increment, recurrence, startAmount} = this.state;
+        this.props.onChange({
+            name, 
+            startDate, 
+            increment: parseFloat(increment), 
+            recurrence: recurrence, 
+            startAmount: parseFloat(startAmount), 
+            endDate: this.getEndDate() 
+        });
     }
 
     render() {
@@ -112,7 +126,7 @@ class ItemList extends React.Component<ItemListProp, ItemListState> {
                         <InputLabel>Recurrence</InputLabel>
                         <Select
                             label="Recurrence"
-                            //value={this.state.recurrence} 
+                            value={this.state.recurrence} 
                             onChange={(e: any) => this.setInput("recurrence", e)}
                             autoWidth
                         >
@@ -122,15 +136,19 @@ class ItemList extends React.Component<ItemListProp, ItemListState> {
                             <MenuItem value={"monthly"}>Monthly</MenuItem>
                         </Select>
                     </FormControl>
-                    <IconButton aria-label="upload picture" component="span" color="primary">
+                    <IconButton
+                        aria-label="upload picture"
+                        component="span"
+                        color="primary"
+                        onClick={() => this.onButtonClick()}
+                    >
                         <AddCircle style={formStyles.buttonStyle} />
                     </IconButton>
                 </div>
             </form>
-            <h2>Time to Buy: {this.getEndDate()}</h2>
             </>
         );
     }
 }
 
-export default ItemList;
+export default ItemForm;

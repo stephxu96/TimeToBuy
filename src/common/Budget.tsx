@@ -1,8 +1,9 @@
 import React from "react";
 
 interface BudgetProps {
-    total: number,
+    budget: number,
     currency: string,
+    endDate: string,
 };
 
 interface BudgetState {
@@ -13,7 +14,8 @@ class Budget extends React.Component<BudgetProps, BudgetState> {
     render () {
         return (
             <>
-                        I am Budget
+                <h3>You've saved up {this.props.currency}{this.props.budget} for your item.</h3>
+                <h2>Time To Buy: {this.props.endDate}</h2>
             </>
         );
     }
