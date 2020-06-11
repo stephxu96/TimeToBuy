@@ -1,17 +1,18 @@
 import React, {FunctionComponent} from 'react';
 import { Item } from '../App';
 import { ListItem, ListItemAvatar, Avatar, ListItemText, ListItemSecondaryAction, IconButton } from '@material-ui/core';
-import FolderIcon from '@material-ui/icons/Folder';
-import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 
 const ItemLine: FunctionComponent<Item> = (props) => {
     console.log(props);
     return (
       <ListItem>
         <ListItemAvatar>
+        {/* TODO: ADD SELECT POPUP TO SELECT ICON
           <Avatar>
             <FolderIcon />
-          </Avatar>
+          </Avatar> 
+        */}
         </ListItemAvatar>
         <ListItemText
           primary="Single-line item"
@@ -19,7 +20,7 @@ const ItemLine: FunctionComponent<Item> = (props) => {
         />
         <ListItemSecondaryAction>
           <IconButton edge="end" aria-label="delete">
-            <DeleteIcon />
+            <EditIcon />
           </IconButton>
         </ListItemSecondaryAction>
       </ListItem>
