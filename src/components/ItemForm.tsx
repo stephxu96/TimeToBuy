@@ -22,9 +22,10 @@ const formStyles =  {
 interface ItemFormProp {
     currency: string;
     onChange: (itemData: Item & { name: string }) => void;
-    defaultData?: Item;
+    defaultData?: Item & { name: string };
     className?: string;
     edit?: boolean;
+    disabled?: boolean;
 };
 
 interface ItemFormState {
@@ -49,7 +50,19 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
 
     constructor(props: any) {
         super(props);
-        this.state = initialState;
+        if (props.defaultData) {
+            let { name, price, startDate, recurrence, increment, startAmount } = props.defaultData;
+            this.state = {
+                name,
+                price: price.toString(),
+                startDate,
+                recurrence,
+                increment: increment.toString(),
+                startAmount: startAmount.toString(),
+            };
+        } else {
+            this.state = initialState;
+        }
     }
     
     setInput = (id: "name" | "startDate" | "price" | "increment" | "recurrence" | "startAmount", event: any) => {
@@ -101,6 +114,7 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
             <form autoComplete="off">
                 <div className={this.props.className}>
                     <TextField 
+                        disabled={this.props.disabled}
                         required 
                         value={this.state.name}
                         label="Item name" 
@@ -109,6 +123,7 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
                         style={formStyles.textStyle}
                     />
                     <TextField 
+                        disabled={this.props.disabled}
                         required 
                         value={this.state.startDate}
                         label="Start date" 
@@ -119,6 +134,7 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
                         style={formStyles.textStyle}
                     />
                     <TextField 
+                        disabled={this.props.disabled}
                         required 
                         value={this.state.startAmount}
                         label={`Starting amount`}
@@ -130,6 +146,7 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
                         }}
                     />
                     <TextField 
+                        disabled={this.props.disabled}
                         required 
                         value={this.state.price}
                         label={`Price`}
@@ -141,6 +158,7 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
                         }}
                     />
                     <TextField
+                        disabled={this.props.disabled}
                         value={this.state.increment}
                         label="Recurring deposit" 
                         variant="outlined"
@@ -153,7 +171,8 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
                     <FormControl variant="outlined" style={formStyles.selectStyle}>
                         <InputLabel>Recurrence</InputLabel>
                         <Select
-                            label="Recurrence"
+                        disabled={this.props.disabled}
+                        label="Recurrence"
                             value={this.state.recurrence} 
                             onChange={(e: any) => this.setInput("recurrence", e)}
                             autoWidth
@@ -167,7 +186,8 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
                 </div>
                 <div>
                     <IconButton
-                        aria-label="upload picture"
+                        disabled={this.props.disabled}
+                        aria-label="Save changes"
                         component="span"
                         color="primary"
                         onClick={() => this.onButtonClick()}

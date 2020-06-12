@@ -8,7 +8,7 @@ interface BudgetTotalProps {
 const BudgetTotal = (props: BudgetTotalProps) => {
     return (
         <>
-            <h3>Total Budget Available</h3>
+            <h4>Total Budget Available</h4>
             <h2>{props.currency}{props.total}</h2>
         </>
     );

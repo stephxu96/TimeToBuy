@@ -14,7 +14,7 @@ class Budget extends React.Component<BudgetProps, BudgetState> {
     render () {
         return (
             <>
-                <h3>You've saved up {this.props.currency}{this.props.budget} for your item.</h3>
+                <h4>You've saved up {this.props.currency}{this.props.budget} for your item.</h4>
                 <h2>Time To Buy: {this.props.endDate}</h2>
             </>
         );
