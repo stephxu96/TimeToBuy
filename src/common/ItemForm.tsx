@@ -1,6 +1,7 @@
 import React from 'react';
 import { TextField, InputLabel, Select, MenuItem, FormControl, InputAdornment, IconButton } from '@material-ui/core';
 import AddCircle from '@material-ui/icons/AddCircle';
+import CheckCircle from '@material-ui/icons/CheckCircle'; 
 import { Item } from '../App';
 
 const formStyles =  {
@@ -9,7 +10,7 @@ const formStyles =  {
         maxWidth: '18ch',
     } as React.CSSProperties,
     selectStyle: {
-        minWidth: '15ch',
+        minWidth: '18ch',
         margin: '5px',
     } as React.CSSProperties,
     buttonStyle: {
@@ -22,6 +23,8 @@ interface ItemFormProp {
     currency: string;
     onChange: (itemData: Item & { name: string }) => void;
     defaultData?: Item;
+    className?: string;
+    edit?: boolean;
 };
 
 interface ItemFormState {
@@ -50,12 +53,11 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
     }
     
     setInput = (id: "name" | "startDate" | "price" | "increment" | "recurrence" | "startAmount", event: any) => {
-        if (event.target.value) {
+        if (event.target.value !== undefined) {
           let updatedState = {...this.state};
           updatedState[id] = event.target.value;
           this.setState(updatedState);
         }
-        console.log(this.state);
     }
 
     getEndDate = () => {
@@ -76,14 +78,15 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
     }
 
     onButtonClick = () => {
-        let {name, startDate, increment, recurrence, startAmount} = this.state;
+        let { name, startDate, increment, recurrence, startAmount, price } = this.state;
         this.props.onChange({
             name, 
             startDate, 
             increment: parseFloat(increment), 
             recurrence: recurrence, 
             startAmount: parseFloat(startAmount), 
-            endDate: this.getEndDate() 
+            price: parseFloat(price),
+            endDate: this.getEndDate(),
         });
         this.clearFormData();
     }
@@ -96,7 +99,7 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
         return (
             <>
             <form autoComplete="off">
-                <div>
+                <div className={this.props.className}>
                     <TextField 
                         required 
                         value={this.state.name}
@@ -161,13 +164,19 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
                             <MenuItem value={"monthly"}>Monthly</MenuItem>
                         </Select>
                     </FormControl>
+                </div>
+                <div>
                     <IconButton
                         aria-label="upload picture"
                         component="span"
                         color="primary"
                         onClick={() => this.onButtonClick()}
                     >
-                        <AddCircle style={formStyles.buttonStyle} />
+                        {this.props.edit ? 
+                            <CheckCircle style={formStyles.buttonStyle} />
+                            :
+                            <AddCircle style={formStyles.buttonStyle} />
+                        }
                     </IconButton>
                 </div>
             </form>

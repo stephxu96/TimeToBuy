@@ -1,9 +1,8 @@
 import React from 'react';
 import './App.css';
 import { Budget, BudgetTotal, BudgetPanel, PaceSelector, ItemForm, ItemLine } from './common';
-import { List } from '@material-ui/core'
+import { Grid, List } from '@material-ui/core'
 ;
-import { truncate } from 'fs';
 interface AppState {
   selectedItem: string | null;
   selectedBudget: number;
@@ -16,6 +15,7 @@ interface AppState {
 };
 
 export interface Item {
+  price: number;
   startDate: string;
   recurrence: string;
   increment: number;
@@ -29,16 +29,19 @@ class App extends React.Component<any, AppState> {
     this.state = { selectedItem: null, currency: '$', totalBudget: 0, endDate: '', selectedBudget: 0, items: {}};
   }
 
+  componentDidMount() {
+    this.setState({ items: { "myItem": { startDate: "Default Start Date", recurrence: "Default recurrence", increment: 10, startAmount: 100,  price: 1000, endDate: "Default end date" }}});
+  }
+
   updateItemList = (itemData: Item & { name: string }) => {
     let prevBudget = this.state.totalBudget;
-    let { name, startDate, endDate, recurrence, increment, startAmount } = itemData;
+    let { name, startDate, endDate, recurrence, increment, startAmount, price } = itemData;
 
     let items = this.state.items;
-    items[name]= { startDate, endDate, recurrence, increment, startAmount };
+    items[name]= { startDate, endDate, recurrence, increment, startAmount, price };
     
     /* TODO: totalBudget should be pulling from this.state.items. Setting it here for testing */
     this.setState({ totalBudget: prevBudget + startAmount, items });
-    console.log(this.state);
   }
 
   render() {
@@ -58,14 +61,16 @@ class App extends React.Component<any, AppState> {
             }
             <PaceSelector />
           </BudgetPanel>
-          <List dense={true}>
-            {
-              Object.keys(this.state.items).map((name) => {
-                return <ItemLine key={name} {...this.state.items[name]} />
-              })
-            }
-          </List>
-          <ItemForm onChange={this.updateItemList} currency={this.state.currency} />
+          <Grid container direction="column" alignItems="center">
+            <List className={"Item-list"} dense={true}>
+              {
+                Object.keys(this.state.items).map((name) => {
+                  return <ItemLine key={name} {...this.state.items[name]} />
+                })
+              }
+            </List>
+            <ItemForm className={"Item-list"} onChange={this.updateItemList} currency={this.state.currency} />
+          </Grid>
       </div>
     );
   }
