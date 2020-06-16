@@ -3,6 +3,7 @@ import { TextField, InputLabel, Select, MenuItem, FormControl, InputAdornment, I
 import AddCircle from '@material-ui/icons/AddCircle';
 import CheckCircle from '@material-ui/icons/CheckCircle'; 
 import { Item } from '../App';
+import { genGUID } from '../utils/BudgetUtils';
 
 const formStyles =  {
     textStyle: {
@@ -20,9 +21,10 @@ const formStyles =  {
 };
 
 interface ItemFormProp {
+    id?: string;
     currency: string;
-    onChange: (itemData: Item & { name: string }) => void;
-    defaultData?: Item & { name: string };
+    onChange: (id:string, itemData: Item) => void;
+    defaultData?: Item;
     className?: string;
     edit?: boolean;
     disabled?: boolean;
@@ -37,7 +39,7 @@ interface ItemFormState {
     startAmount: string;
 };
 
-const initialState: ItemFormState = { 
+const initialState: ItemFormState = {
     name: "", 
     price: "", 
     startDate: "", 
@@ -91,16 +93,20 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
     }
 
     onButtonClick = () => {
+        console.log(`In ItemForm with id ${this.props.id}`)
         let { name, startDate, increment, recurrence, startAmount, price } = this.state;
-        this.props.onChange({
-            name, 
-            startDate, 
-            increment: parseFloat(increment), 
-            recurrence: recurrence, 
-            startAmount: parseFloat(startAmount), 
-            price: parseFloat(price),
-            endDate: this.getEndDate(),
-        });
+        this.props.onChange(
+            this.props.id ? this.props.id : genGUID(), 
+            {
+                name, 
+                startDate, 
+                increment: parseFloat(increment), 
+                recurrence: recurrence, 
+                startAmount: parseFloat(startAmount), 
+                price: parseFloat(price),
+                endDate: this.getEndDate(),
+            }
+        );
         this.clearFormData();
     }
 
@@ -123,7 +129,7 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
                         style={formStyles.textStyle}
                     />
                     <TextField 
-                        disabled={this.props.disabled}
+                        disabled={this.props.edit || this.props.disabled}
                         required 
                         value={this.state.startDate}
                         label="Start date" 
@@ -192,7 +198,8 @@ class ItemForm extends React.Component<ItemFormProp, ItemFormState> {
                         color="primary"
                         onClick={() => this.onButtonClick()}
                     >
-                        {this.props.edit ? 
+                        {
+                            this.props.edit ? 
                             <CheckCircle style={formStyles.buttonStyle} />
                             :
                             <AddCircle style={formStyles.buttonStyle} />

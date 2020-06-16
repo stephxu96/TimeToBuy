@@ -5,19 +5,22 @@ import EditIcon from '@material-ui/icons/Edit';
 import ItemForm from './ItemForm';
 
 type ItemLineProps = {
+    id: string;
     currency: string;
     selected: boolean;
-    name: string;
     className?: string;
-    metadata: Item;
-    onChange: (itemData: Item & { name: string }) => void;
+    lineData: Item;
+    onChange: (id:string, itemData: Item) => void;
     onEditClick: () => void;
-    onItemSelect: (name: string | null) => void
+    onItemSelect: (id: string | null) => void
 };
 
 const ItemLine: FunctionComponent<ItemLineProps> = (props) => {
     const [mode, setMode] = useState("display");
     let item = null;
+
+    console.log(`In ItemLine`);
+    console.log(props);
 
     switch (mode) {
         case "display":
@@ -26,8 +29,8 @@ const ItemLine: FunctionComponent<ItemLineProps> = (props) => {
                     selected={props.selected} 
                     button 
                     className={props.className} 
-                    key={props.name}
-                    onClick={() => props.onItemSelect(props.selected ? null : props.name)}
+                    key={props.id}
+                    onClick={() => props.onItemSelect(props.selected ? null : props.id)}
                 >
                     {/* <ListItemAvatar>
                     TODO: ADD SELECT POPUP TO SELECT ICON
@@ -36,8 +39,8 @@ const ItemLine: FunctionComponent<ItemLineProps> = (props) => {
                         </Avatar> 
                     </ListItemAvatar> */}
                     <ListItemText
-                        primary={props.name}
-                        secondary={`${props.currency}${props.metadata.startAmount}`}
+                        primary={props.lineData.name}
+                        secondary={`${props.currency}${props.lineData.startAmount}`}
                     />
                     <ListItemSecondaryAction>
                         <IconButton
@@ -56,13 +59,15 @@ const ItemLine: FunctionComponent<ItemLineProps> = (props) => {
             );
             break;
         case "edit":
+            console.log(`In ItemLine with id ${props.id}`)
             item = (
                 <ItemForm
                     edit
+                    id={props.id}
                     currency={props.currency} 
-                    defaultData={{...props.metadata, name: props.name}} 
-                    onChange={(data) => {
-                        props.onChange(data);
+                    defaultData={props.lineData} 
+                    onChange={(id, data) => {
+                        props.onChange(id, data);
                         setMode("display");
                     }} 
                 />

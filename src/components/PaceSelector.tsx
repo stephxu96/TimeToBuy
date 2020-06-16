@@ -6,7 +6,7 @@ const PaceSelector: FunctionComponent = () => {
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValue(event.target.value);
-      };
+    };
 
     return (
         <FormControl component="fieldset">
